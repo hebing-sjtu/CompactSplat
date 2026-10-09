@@ -1,0 +1,13 @@
+name: rect_growth_pro
+scl_overlapping: 1.0
+
+bias_flag: False
+uniform_bias: True
+n_views: 1
+
+block_height: 32
+block_width: 32
+threshold_min: 0.0
+threshold_max: 0.2
+max_subblock_size: 16
+max_aspect_ratio: 2.0

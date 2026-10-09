@@ -1,0 +1,53 @@
+# Dependency set for H200 (sm_90) nodes whose image ships torch 2.12.0+cu126.
+#
+# Install with the companion constraints file so pip can never move torch:
+#   pip install -r requirements-h200.txt -c constraints-image.txt
+#
+# Differences from requirements.txt, which is pinned to torch 2.4.0 / cu124:
+#   - xformers dropped. Its only use site (encoder/unimatch/ldm_unet/cross_attention.py)
+#     is guarded by try/except and honours XFORMERS_DISABLED, so attention falls back
+#     to the plain PyTorch path. A torch-2.4 xformers wheel cannot load under 2.12.
+#   - numpy moved off 1.24.4: torch 2.12 wheels are built against the numpy 2 ABI,
+#     and 1.24.4 has no cp312 wheels.
+#   - pytorch_lightning bumped to 2.5.x for torch 2.12 compatibility.
+#   - moviepy stays below 2.0 because model_wrapper.py imports moviepy.editor,
+#     which 2.x removed.
+
+# --- numerics -------------------------------------------------------------
+numpy>=2.1,<3
+
+# --- training / config ----------------------------------------------------
+pytorch_lightning>=2.5.2,<2.7
+hydra-core==1.3.2
+dacite==1.8.1
+jaxtyping==0.2.33
+beartype==0.18.5
+einops==0.8.0
+e3nn>=0.5.6
+wandb>=0.18
+tqdm>=4.66.4
+tabulate==0.9.0
+colorama==0.4.6
+
+# --- metrics / losses -----------------------------------------------------
+lpips==0.1.4
+scikit-image>=0.25
+opencv-python>=4.11
+Pillow>=10.4
+colorspacious==1.1.2
+
+# --- IO / visualisation ---------------------------------------------------
+matplotlib>=3.9.1
+plyfile==1.1
+moviepy>=1.0.3,<2.0
+sk-video==1.1.10        # last released 2017; see setup_h200.sh for the import check
+imageio-ffmpeg>=0.5     # fallback video writer if sk-video fails to import
+
+# --- build-time only (Cython extension in src/dataset/GS_pattern) ---------
+Cython>=3.0
+setuptools>=70
+ninja>=1.11              # parallelises the nvcc build of the rasteriser
+
+# --- CUDA rasteriser ------------------------------------------------------
+# Compiled from source; setup_h200.sh exports TORCH_CUDA_ARCH_LIST=9.0 for H200.
+diff-gaussian-rasterization @ git+https://github.com/dcharatan/diff-gaussian-rasterization-modified

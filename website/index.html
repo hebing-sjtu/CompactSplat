@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="CompactSplat: content-adaptive Gaussian allocation for feedforward scene reconstruction, with inference-time sparsity control. NeurIPS 2026.">
+  <meta name="theme-color" content="#126958">
+  <title>CompactSplat · NeurIPS 2026</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23126958'/%3E%3Cpath d='M7 7h10v18H7zM20 7h5v5h-5zM20 15h5v10h-5z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="review-bar">Research code <span>Checkpoints pending release</span></div>
+  <header class="publication-header" id="top">
+    <a class="wordmark" href="#top" aria-label="CompactSplat home"><span class="mark" aria-hidden="true">▦</span> CompactSplat</a>
+    <h1><span>CompactSplat:</span> Spatially Adaptive Gaussian Distribution for Feedforward Scene Reconstruction</h1>
+    <div class="authors" aria-label="Authors">
+      <a href="https://openreview.net/profile?id=~Bing_He5">Bing He</a>
+      <a href="https://openreview.net/profile?id=~Jingnan_Gao1">Jingnan Gao</a>
+      <a href="https://openreview.net/profile?id=~Yunuo_Chen1">Yunuo Chen</a>
+      <a href="https://openreview.net/profile?id=~Zhengxue_Cheng1">Zhengxue Cheng</a>
+      <a href="https://openreview.net/profile?id=~Rong_Xie1">Rong Xie</a>
+      <a href="https://openreview.net/profile?id=~Li_Song3">Li Song</a>
+      <a href="https://openreview.net/profile?id=~Wenjun_Zhang3">Wenjun Zhang</a>
+    </div>
+    <p class="venue">NeurIPS 2026 <span>Poster</span></p>
+    <div class="publication-links">
+      <a class="button" href="https://openreview.net/pdf?id=3sn6PeO6Ch"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/></svg>Paper</a>
+      <a class="button" href="https://openreview.net/forum?id=3sn6PeO6Ch"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v13H9l-5 4zM8 9h8M8 13h5"/></svg>OpenReview</a>
+      <a class="button" href="https://github.com/hebing-sjtu/CompactSplat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 4l-4 16"/></svg>Code</a>
+      <a class="button button-light" href="#bibtex">BibTeX</a>
+    </div>
+  </header>
+  <main id="main">
+    <section class="teaser-band" aria-label="CompactSplat at a glance">
+      <figure class="wide">
+        <a href="assets/teaser.png" aria-label="Open full-size teaser figure"><img src="assets/teaser.png" alt="Paper teaser showing content-adaptive Gaussian allocation and the quality–compactness trade-off." width="1978" height="1457" fetchpriority="high"></a>
+        <figcaption><strong>Allocate Gaussians where they matter.</strong> Dense primitives capture detailed regions; larger, scale-modulated primitives represent smooth areas. One set of weights supports different sparsity levels.</figcaption>
+      </figure>
+    </section>
+    <div class="highlights wide" aria-label="Reported RealEstate10K results">
+      <div><strong>44.6<span>%</span></strong><p>fewer Gaussians<small>vs. a one-Gaussian-per-pixel baseline</small></p></div>
+      <div><strong>27.57 <span>dB</span></strong><p>native-resolution PSNR<small>CompactSplat-L · RealEstate10K</small></p></div>
+      <div><strong>1 <span>model</span></strong><p>adjustable sparsity at inference<small>controlled by the partition threshold τ</small></p></div>
+    </div>
+    <nav class="section-nav" aria-label="Page sections"><a href="#abstract">Abstract</a><a href="#overview">Overview</a><a href="#results">Results</a><a href="#sparsity">Sparsity control</a><a href="#scope">Discussion</a></nav>
+    <section class="section reading" id="abstract">
+      <h2>Abstract</h2>
+      <p>Feedforward Gaussian reconstruction commonly assigns a fixed number of primitives to every input pixel, regardless of local scene content. This produces redundant representations in smooth regions and limits control over the size of the reconstructed scene.</p>
+      <p><strong>CompactSplat</strong> introduces content-adaptive Gaussian allocation through a <strong>Texture-Aware Partitioner (TAP)</strong> and a <strong>Hierarchical Pyramid Sampler (HPS)</strong>. TAP partitions each input image according to local appearance variation. HPS samples a multi-resolution attribute field at a matching scale, producing dense primitives around detail and larger primitives over homogeneous regions. A single threshold adjusts sparsity at inference without retraining.</p>
+      <p>Built on the DepthSplat/SurfSplat backbone, CompactSplat preserves strong rendering quality with fewer primitives. On RealEstate10K, the large model uses <strong>0.554 Gaussians per input pixel</strong> while achieving <strong>27.567 dB PSNR</strong> at native resolution. High-resolution rendering is evaluated using SurfSplat’s HRRC protocol; the contribution is compact allocation while retaining the backbone’s surface-continuity behavior.</p>
+    </section>
+    <section class="section wide" id="overview">
+      <h2>Overview</h2>
+      <p class="section-intro">From two posed images to a compact scene representation.</p>
+      <figure><a href="assets/pipeline.png" aria-label="Open full-size method overview"><img src="assets/pipeline.png" alt="CompactSplat pipeline: dual-branch feature encoding, texture-aware partitioning, hierarchical pyramid sampling, and scale-modulated Gaussians." width="2000" height="605" loading="lazy"></a><figcaption>The encoder and surface-continuity components follow DepthSplat and SurfSplat. TAP and HPS introduce spatially adaptive primitive allocation.</figcaption></figure>
+      <div class="method-steps">
+        <div><span class="step-number">01</span><h3>Partition by content</h3><p>A quadtree subdivides regions with greater RGB variation, while homogeneous regions remain in larger blocks.</p></div>
+        <div><span class="step-number">02</span><h3>Sample at the right scale</h3><p>Each leaf samples Gaussian attributes from a corresponding pyramid level, aligning the sampling footprint with the region it represents.</p></div>
+        <div><span class="step-number">03</span><h3>Control the representation</h3><p>Block size modulates primitive scale. Adjusting τ changes the primitive budget using the same trained weights.</p></div>
+      </div>
+      <div class="protocol"><strong>Reported evaluation protocol</strong><p>2 calibrated context views · 256 × 256 inputs on RealEstate10K · τ<sub>test</sub> = 0.02 · τ<sub>train</sub> ∼ U(0, 0.02). Rendering at ×2 or ×4 uses the same reconstructed Gaussians.</p><p class="small">These are the paper settings. The current implementation snapshot uses a different partition criterion and training threshold range; see the <a href="https://github.com/hebing-sjtu/CompactSplat/blob/main/docs/REPRODUCIBILITY.md">reproducibility notes</a> before reproducing the tables.</p></div>
+    </section>
+    <section class="section results-section" id="results">
+      <div class="wide">
+        <h2>Results</h2>
+        <p class="section-intro">High-resolution rendering, with fewer primitives.</p>
+        <figure><a href="assets/exp0.png" aria-label="Open full-size qualitative comparison"><img src="assets/exp0.png" alt="Paper comparison of RGB and depth renderings from pixelSplat, MVSplat, DepthSplat, YonoSplat, and CompactSplat under increasing rendering magnification." width="1710" height="1763" loading="lazy"></a><figcaption>Qualitative results from the manuscript. Blue, green and red regions correspond to ×1, ×2 and ×4 rendering magnification of the same scene representation.</figcaption></figure>
+        <div class="table-heading"><div><h3>RealEstate10K</h3><p>Selected baselines and all CompactSplat model sizes.</p></div><fieldset class="scale-selector"><legend>Rendering resolution</legend><label><input type="radio" name="scale" value="0" checked><span>256² <small>×1</small></span></label><label><input type="radio" name="scale" value="1"><span>512² <small>×2</small></span></label><label><input type="radio" name="scale" value="2"><span>1024² <small>×4</small></span></label></fieldset></div>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="RealEstate10K comparison table"><table><caption id="table-caption">256 × 256 · Standard rendering</caption><thead><tr><th scope="col">Method</th><th scope="col">PSNR ↑</th><th scope="col">SSIM ↑</th><th scope="col">LPIPS ↓</th><th scope="col">GPP ↓</th><th scope="col">Gaussians ↓</th></tr></thead><tbody id="results-body">
+          <tr><th scope="row">pixelSplat</th><td>26.049</td><td>0.862</td><td>0.137</td><td>3.000</td><td>393.2k</td></tr>
+          <tr><th scope="row">MVSplat</th><td>26.359</td><td>0.868</td><td>0.129</td><td>1.000</td><td>131.1k</td></tr>
+          <tr><th scope="row">DepthSplat</th><td>27.504</td><td>0.890</td><td>0.112</td><td>1.000</td><td>131.1k</td></tr>
+          <tr><th scope="row">SurfSplat</th><td>27.537</td><td>0.892</td><td>0.112</td><td>1.000</td><td>131.1k</td></tr>
+          <tr class="ours"><th scope="row">CompactSplat-S</th><td>27.086</td><td>0.884</td><td>0.123</td><td>0.554</td><td>72.6k</td></tr>
+          <tr class="ours"><th scope="row">CompactSplat-B</th><td>27.523</td><td>0.891</td><td>0.118</td><td>0.554</td><td>72.6k</td></tr>
+          <tr class="ours"><th scope="row">CompactSplat-L</th><td>27.567</td><td>0.892</td><td>0.117</td><td>0.554</td><td>72.6k</td></tr>
+        </tbody></table></div>
+        <p id="comparison-note" class="comparison-note" aria-live="polite">At native resolution, CompactSplat-L is close to SurfSplat in PSNR (+0.030 dB), ties its SSIM, and has higher LPIPS (0.117 vs. 0.112), with 44.6% fewer Gaussians.</p>
+        <p class="table-note">Values are transcribed from manuscript Table 1, not newly reproduced runs. GPP is Gaussians per input pixel; counts are unchanged across rendering resolutions. The table is a selected comparison, not a claim of superiority over every method.</p>
+      </div>
+    </section>
+    <section class="section wide" id="sparsity">
+      <h2>One model, different sparsity levels</h2>
+      <p class="section-intro">A partition threshold trades representation size against fidelity at inference.</p>
+      <div class="sparsity-grid"><figure><a href="assets/gpp_models.png" aria-label="Open full-size sparsity curves"><img src="assets/gpp_models.png" alt="Paper curves showing PSNR, SSIM, and LPIPS versus GPP for small, base, and large CompactSplat models." width="2000" height="711" loading="lazy"></a><figcaption>Measured quality–compactness curves for the three model sizes, reproduced from the manuscript.</figcaption></figure><figure><a href="assets/ablation.png" aria-label="Open full-size sparsity visualizations"><img src="assets/ablation.png" alt="RGB, depth, and normal visualizations at 0.39, 0.49, and 0.85 Gaussians per pixel." width="1947" height="1953" loading="lazy"></a><figcaption>Changing sparsity alters the balance between broad smooth regions and fine local detail.</figcaption></figure></div>
+    </section>
+    <section class="section reading" id="scope">
+      <h2>Discussion &amp; limitations</h2>
+      <p>CompactSplat changes <strong>where and at what scale primitives are allocated</strong>, while reusing a proven feedforward backbone. HRRC and the surface-continuity prior originate in <a href="https://hebing-sjtu.github.io/SurfSplat-website/">SurfSplat</a>. The results support retaining high-resolution rendering quality under sparsification; they do not establish watertight geometry or isolate every component’s contribution.</p>
+      <p>Other non-pixel-aligned approaches explore learnable tokens (<a href="https://research.nvidia.com/labs/toronto-ai/tokengs/">TokenGS</a> and <a href="https://cvlab-kaist.github.io/C3G/">C3G</a>), voxel-aligned prediction (<a href="https://lhmd.top/volsplat/">VolSplat</a>), or subpixel primitive detection with adaptive patch density (<a href="https://arthurmoreau.github.io/OffTheGrid/">Off The Grid</a>). CompactSplat uses a hierarchical image-space quadtree, with a tunable partition threshold and scale-matched attribute sampling. These are complementary design choices; performance depends on the input protocol and primitive budget.</p>
+      <details open><summary>Scope of the current evidence</summary><ul><li><strong>Calibrated cameras are required.</strong> CompactSplat assumes camera intrinsics and extrinsics; pose-free approaches such as <a href="https://github.com/facebookresearch/vggt">VGGT</a> and <a href="https://city-super.github.io/anysplat/">AnySplat</a> also estimate cameras from images.</li><li><strong>Cross-view redundancy remains.</strong> Allocation is performed per view. The gains from adding cross-view merging have not been established.</li><li><strong>Appearance is an imperfect guide.</strong> Noise and specularities can trigger extra subdivisions, while weak color changes may hide depth discontinuities.</li><li><strong>Component attribution remains incomplete.</strong> An isolated HPS comparison against finest-level-only sampling and transfer to a backbone without the surface prior are not established by the current results.</li></ul></details>
+      <p class="release-note">This repository contains training and evaluation source code. CompactSplat checkpoints are not yet published; upstream DepthSplat weights are not CompactSplat checkpoints.</p>
+    </section>
+    <section class="section reading" id="bibtex">
+      <div class="citation-heading"><h2>BibTeX</h2><button class="copy-button" id="copy-citation" type="button">Copy citation</button></div>
+      <pre><code id="citation">@inproceedings{he2026compactsplat,
+  title = {CompactSplat: Spatially Adaptive Gaussian Distribution
+           for Feedforward Scene Reconstruction},
+  author = {Bing He and Jingnan Gao and Yunuo Chen and
+            Zhengxue Cheng and Rong Xie and Li Song and Wenjun Zhang},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year = {2026},
+  url = {https://openreview.net/forum?id=3sn6PeO6Ch}
+}</code></pre><p id="copy-status" class="small" aria-live="polite"></p>
+    </section>
+  </main>
+  <footer><div class="reading"><p><strong>CompactSplat</strong> · NeurIPS 2026</p><p>Page structure inspired by <a href="https://hebing-sjtu.github.io/SurfSplat-website/">SurfSplat</a> and the <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> academic project-page tradition. All result figures are from the CompactSplat manuscript.</p><a href="#top">Back to top ↑</a></div></footer>
+</body>
+</html>
