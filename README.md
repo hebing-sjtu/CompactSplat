@@ -59,11 +59,11 @@ These are paper-reported values, not a new benchmark of this checkout. At 0.554 
 ## Repository
 
 ```bash
-git clone git@github.com:hebing-sjtu/CompactSplat.git
+git clone https://github.com/hebing-sjtu/CompactSplat.git
 cd CompactSplat
 ```
 
-Access currently requires permission to the private repository. Inherited configuration and script names such as `depthsplat` are retained for compatibility.
+Inherited configuration and script names such as `depthsplat` are retained for compatibility.
 
 | Location | Purpose |
 | :--- | :--- |
