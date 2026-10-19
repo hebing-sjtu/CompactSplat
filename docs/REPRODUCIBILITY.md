@@ -19,7 +19,7 @@ The reported setting uses two posed input views with calibrated intrinsics. TAP 
 | Main evaluation threshold | Fixed threshold 0.02 | The dataset samples a threshold at train, validation, and test time unless both bounds are equal |
 | HPS | Match sampling scale to partition footprint | Area downsampling and bilinear center sampling, with a separate LoD bias for normal/scale fields |
 | HRRC | Same Gaussians rendered at ×1, ×2, and ×4 | Implemented in the non-chunked test path; targets are bilinearly upsampled for ×2 and ×4 comparisons |
-| Trained CompactSplat checkpoint | Needed to reproduce reported results | No release checkpoint is identified in this repository |
+| Trained CompactSplat checkpoint | Needed to reproduce reported results | Weights are hosted at [`binghe-sjtu/compactsplat`](https://huggingface.co/binghe-sjtu/compactsplat); per-checkpoint reproduction remains to be validated |
 
 The implemented TAP statistic differs from the paper's max–min definition. Threshold values are not interchangeable between the two statistics. Changing the YAML bounds alone therefore does **not** recover the paper method. A paper-matched code revision, checkpoint, and resolved configuration must be paired and validated before publishing reproduction claims.
 

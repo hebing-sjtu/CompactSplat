@@ -5,9 +5,10 @@
 </p>
 <h3 align="center">NeurIPS 2026 (Poster)</h3>
 <p align="center">
-  <a href="https://openreview.net/forum?id=3sn6PeO6Ch">Paper &amp; OpenReview</a> ·
-  <a href="website/README.md">Project Website Source</a> ·
-  <a href="MODEL_ZOO.md">Model Status</a> ·
+  <a href="https://arxiv.org/abs/2610.13177">Paper</a> ·
+  <a href="https://hebing-sjtu.github.io/CompactSplat-website/">Project Page</a> ·
+  <a href="https://huggingface.co/binghe-sjtu/compactsplat">Pretrained Models</a> ·
+  <a href="https://openreview.net/forum?id=3sn6PeO6Ch">OpenReview</a> ·
   <a href="docs/REPRODUCIBILITY.md">Reproducibility Notes</a>
 </p>
 
@@ -17,7 +18,7 @@
 <p align="center"><strong>Allocate Gaussians where image content needs them.</strong><br>
 CompactSplat reconstructs a scene from two posed input images and lets one model trade representation size for rendering quality at inference time.</p>
 
-> **Implementation status.** CompactSplat checkpoints have not been released. The current partition criterion and default thresholds differ from the paper; see the [reproducibility notes](docs/REPRODUCIBILITY.md) before interpreting results.
+> **Reproducibility.** The current partition criterion and default thresholds differ from the paper; see the [reproducibility notes](docs/REPRODUCIBILITY.md) before interpreting results.
 
 ## Methodology
 
@@ -43,7 +44,7 @@ RealEstate10K, two 256 × 256 input views, standard-resolution novel-view evalua
 | CompactSplat-B | 27.523 | 0.891 | 0.118 | 0.554 | 72.6k |
 | CompactSplat-L | 27.567 | 0.892 | 0.117 | 0.554 | 72.6k |
 
-These are paper-reported values, not a new benchmark of this checkout. At 0.554 Gaussians per input pixel, the representation uses approximately 44.6% fewer primitives than a one-Gaussian-per-pixel allocation. See the [paper](https://openreview.net/forum?id=3sn6PeO6Ch) for full comparisons and HRRC results.
+These are paper-reported values, not a new benchmark of this checkout. At 0.554 Gaussians per input pixel, the representation uses approximately 44.6% fewer primitives than a one-Gaussian-per-pixel allocation. See the [paper](https://arxiv.org/abs/2610.13177) for full comparisons and HRRC results.
 
 ## Roadmap
 
@@ -51,7 +52,8 @@ These are paper-reported values, not a new benchmark of this checkout. At 0.554 
 - [x] Document paper settings and current implementation differences.
 - [x] Include the static project website source.
 - [ ] Validate a paper-matched configuration and checkpoint end to end.
-- [ ] Release CompactSplat checkpoints with configuration files and checksums.
+- [x] Provide the [CompactSplat weights repository](https://huggingface.co/binghe-sjtu/compactsplat) on Hugging Face.
+- [ ] Publish per-checkpoint configuration files and checksums.
 - [ ] Complete the isolated HPS finest-level versus multilevel ablation.
 
 ## Repository
@@ -92,7 +94,9 @@ For an H200 container environment, use `bash scripts/setup_h200.sh /path/to/venv
 
 ## Model Zoo
 
-**CompactSplat trained weights are pending release.** [MODEL_ZOO.md](MODEL_ZOO.md) distinguishes the required initialization weights from inherited DepthSplat baseline checkpoints. Upstream checkpoints are not substitutes for a trained CompactSplat checkpoint.
+Download trained CompactSplat weights from [`binghe-sjtu/compactsplat`](https://huggingface.co/binghe-sjtu/compactsplat) on Hugging Face. Check the model repository for available checkpoint files and match the model variant to your configuration. Set `checkpointing.load` to the downloaded checkpoint path for evaluation.
+
+[MODEL_ZOO.md](MODEL_ZOO.md) lists model variants, initialization weights, and inherited DepthSplat baseline checkpoints. Upstream checkpoints are not substitutes for a trained CompactSplat checkpoint.
 
 For the small backbone used in the smoke test below:
 
@@ -141,7 +145,7 @@ Replace `YOUR_PARTITION` with your cluster's partition. The launcher defaults to
 
 ## Evaluation
 
-A trained CompactSplat checkpoint is required. This example evaluates a **large-model** checkpoint on RealEstate10K with two views and a fixed partition threshold:
+Download a trained CompactSplat checkpoint from [Hugging Face](https://huggingface.co/binghe-sjtu/compactsplat) and replace `/path/to/compactsplat-large.ckpt` below with its local path. This example evaluates a **large-model** checkpoint on RealEstate10K with two views and a fixed partition threshold:
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python -m src.main +experiment=re10k \
@@ -180,7 +184,10 @@ Intrinsics are normalized: divide the first row by image width and the second ro
   author    = {He, Bing and Gao, Jingnan and Chen, Yunuo and Cheng, Zhengxue and Xie, Rong and Song, Li and Zhang, Wenjun},
   booktitle = {Advances in Neural Information Processing Systems},
   year      = {2026},
-  url       = {https://openreview.net/forum?id=3sn6PeO6Ch}
+  eprint    = {2610.13177},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.CV},
+  url       = {https://arxiv.org/abs/2610.13177}
 }
 ```
 

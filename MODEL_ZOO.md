@@ -1,16 +1,20 @@
 # Model Zoo
 
-## CompactSplat release status
+## CompactSplat checkpoints
 
-**CompactSplat checkpoints are not yet released.** This repository contains implementation and experiment scripts, but the example checkpoint paths do not include trained weights. A download, exact training configuration, code revision, and checksum are pending validation and release.
+Trained CompactSplat weights are hosted at [`binghe-sjtu/compactsplat`](https://huggingface.co/binghe-sjtu/compactsplat) on Hugging Face. Consult the model repository for currently available checkpoint files, download the required variant, and set `checkpointing.load` to its local path for evaluation. The example paths in this code repository are placeholders.
+
+Per-checkpoint training configurations, code revisions, checksums, and end-to-end numerical reproduction remain to be documented and validated.
 
 Do not report results from an upstream DepthSplat checkpoint as CompactSplat results. The adapted Gaussian head is different, so full upstream reconstruction weights are not guaranteed to load into this implementation without a deliberate conversion.
 
-| Variant | Monocular backbone | CompactSplat checkpoint |
-| :--- | :--- | :--- |
-| CompactSplat-S | Depth Anything V2 ViT-S | Pending release |
-| CompactSplat-B | Depth Anything V2 ViT-B | Pending release |
-| CompactSplat-L | Depth Anything V2 ViT-L | Pending release |
+Match each checkpoint to the corresponding model architecture:
+
+| Variant | Monocular backbone |
+| :--- | :--- |
+| CompactSplat-S | Depth Anything V2 ViT-S |
+| CompactSplat-B | Depth Anything V2 ViT-B |
+| CompactSplat-L | Depth Anything V2 ViT-L |
 
 See [README.md](README.md#training) for a current-code smoke test and [reproducibility notes](docs/REPRODUCIBILITY.md) for the paper/current-code differences.
 
